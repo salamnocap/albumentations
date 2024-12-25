@@ -367,6 +367,19 @@ def check_bboxes(bboxes: np.ndarray) -> None:
         ValueError: If any bbox is invalid.
     """
     # Check if all values are in range [0, 1]
+    for bbox in bboxes:
+        if bbox[0] == bbox[2]:
+            bbox[0] -= 0.01
+            bbox[2] += 0.01
+        if bbox[1] == bbox[3]:
+            bbox[1] -= 0.01
+            bbox[3] += 0.01
+        
+        bbox[0] = max(0.0, min(bbox[0], 1.0)) 
+        bbox[1] = max(0.0, min(bbox[1], 1.0))
+        bbox[2] = max(0.0, min(bbox[2], 1.0))
+        bbox[3] = max(0.0, min(bbox[3], 1.0))
+
     in_range = (bboxes[:, :4] >= 0) & (bboxes[:, :4] <= 1)
     close_to_zero = np.isclose(bboxes[:, :4], 0)
     close_to_one = np.isclose(bboxes[:, :4], 1)
